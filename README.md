@@ -1,4 +1,8 @@
 # C-project-
 C++ game project
 
-test
+Header:
+- description 
+
+Creators: 
+Annaliese Ferchau and Mehrshad Esmaeilzadeh
