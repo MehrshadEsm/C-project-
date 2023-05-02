@@ -154,7 +154,7 @@ int main(int argc, char const *argv[])
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(renderer);
 
-        SDL_SetRenderDrawColor(renderer, 255, 105, 180, SDL_ALPHA_OPAQUE);
+        SDL_SetRenderDrawColor(renderer, 255, 100, 180, SDL_ALPHA_OPAQUE);
         SDL_RenderFillRect(renderer, &sdlRect);
         SDL_RenderPresent(renderer);
         
