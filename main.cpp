@@ -1,5 +1,6 @@
 #include <iostream>
 #include <SDL2/SDL.h>
+#include <SDL_image.h>
 using namespace std;
 int main(int argc, char const *argv[])
 {
@@ -34,6 +35,22 @@ int main(int argc, char const *argv[])
         std::cout << "SDL video system is ready to go\n";
     }
 
+    int imgFlags = IMG_INIT_PNG; // Use IMG_INIT_PNG for PNG images. You can use multiple flags if needed.
+if (!(IMG_Init(imgFlags) & imgFlags))
+{
+    std::cout << "SDL_image could not be initialized: " << IMG_GetError();
+    SDL_Quit();
+    return 1;
+}
+
+SDL_Surface* imageSurface = IMG_Load("/Users/mehrshad/Desktop/background.jpg");
+    if (!imageSurface)
+    {
+        std::cout << "Failed to load image: " << IMG_GetError() << std::endl;
+        SDL_Quit();
+        return 1;
+    }
+
     // Create an application window with the following settings:
     window = SDL_CreateWindow(
         "An SDL2 window",        // window title
@@ -61,6 +78,17 @@ int main(int argc, char const *argv[])
         return 1;
     }
 
+     SDL_Texture* imageTexture = SDL_CreateTextureFromSurface(renderer, imageSurface);
+    if (!imageTexture)
+    {
+        std::cout << "Failed to create texture: " << SDL_GetError() << std::endl;
+        SDL_FreeSurface(imageSurface);
+        SDL_Quit();
+        return 1;
+    }
+
+
+    SDL_FreeSurface(imageSurface);
     //main game/app loop
     while (appIsRunning)
     {
@@ -154,16 +182,52 @@ int main(int argc, char const *argv[])
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(renderer);
 
+        SDL_RenderCopy(renderer, imageTexture, nullptr, nullptr);
+
         SDL_SetRenderDrawColor(renderer, 255, 100, 180, SDL_ALPHA_OPAQUE);
         SDL_RenderFillRect(renderer, &sdlRect);
+        //SDL_RenderPresent(renderer);
+
+        
+
+        // Update the screen
         SDL_RenderPresent(renderer);
+
+        lastDrawTime = SDL_GetTicks64();
         
         lastDrawTime = SDL_GetTicks64();
     }
 
+    SDL_RenderClear(renderer);
+    SDL_RenderCopy(renderer, imageTexture, nullptr, nullptr);
+    SDL_RenderPresent(renderer);
+
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
+    SDL_DestroyTexture(imageTexture);
     std::cout << "exiting..." << std::endl;
+    IMG_Quit();
     SDL_Quit();
     return 0;
 }
+
+// #include <SFML/Graphics.hpp>
+
+// int main() {
+//     sf::RenderWindow window(sf::VideoMode(800, 600), "SFML Window");
+
+//     while (window.isOpen()) {
+//         sf::Event event;
+//         while (window.pollEvent(event)) {
+//             if (event.type == sf::Event::Closed) {
+//                 window.close();
+//             }
+//         }
+
+//         window.clear(sf::Color::White);
+//         // Draw your game elements here
+//         window.display();
+//     }
+
+//     return 0;
+// }
