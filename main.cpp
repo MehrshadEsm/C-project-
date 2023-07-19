@@ -51,6 +51,16 @@ SDL_Surface* imageSurface = IMG_Load("/Users/mehrshad/Desktop/background.jpg");
         return 1;
     }
 
+    SDL_Surface* newImageSurface = IMG_Load("/Users/mehrshad/Desktop/bruh.png");
+if (!newImageSurface)
+{
+    std::cout << "Failed to load new image: " << IMG_GetError() << std::endl;
+    // Handle the error if the new image cannot be loaded
+}
+
+
+
+
     // Create an application window with the following settings:
     window = SDL_CreateWindow(
         "An SDL2 window",        // window title
@@ -87,9 +97,27 @@ SDL_Surface* imageSurface = IMG_Load("/Users/mehrshad/Desktop/background.jpg");
         return 1;
     }
 
+    // Create a new texture from the new image
+    SDL_Texture* newImageTexture = SDL_CreateTextureFromSurface(renderer, newImageSurface);
+     if (!newImageTexture)
+     {
+    std::cout << "Failed to create texture for new image: " << SDL_GetError() << std::endl;
+    SDL_FreeSurface(newImageSurface);
+    // Handle the error if the new texture cannot be created
+}
+
+
 
     SDL_FreeSurface(imageSurface);
+    // Free the surface used for loading the new image
+    SDL_FreeSurface(newImageSurface);
     //main game/app loop
+
+    SDL_Rect newImageRect;
+    newImageRect.x = resW/2 - sdlRect.w/2; // Set the x-coordinate of the top-left corner
+    newImageRect.y = resH/2 - sdlRect.h/2; // Set the y-coordinate of the top-left corner
+    newImageRect.w = resW/10; // Set the width of the new image (adjust as needed)
+    newImageRect.h = resW/6; // Set the height of the new image (adjust as needed)
     while (appIsRunning)
     {
         //slowing things down a little, you can delete this if you like
@@ -112,6 +140,26 @@ SDL_Surface* imageSurface = IMG_Load("/Users/mehrshad/Desktop/background.jpg");
                 else if (event.key.keysym.scancode == SDL_SCANCODE_LEFT)
                 {
                 leftArrowDown = true;
+                // Load the new image for the left arrow key
+                newImageSurface = IMG_Load("/Users/mehrshad/Desktop/bruh.png");
+                if (!newImageSurface)
+                {
+                    std::cout << "Failed to load new image: " << IMG_GetError() << std::endl;
+                    // Handle the error if the new image cannot be loaded
+                }
+
+                // Update the new image texture with the new image
+                SDL_DestroyTexture(newImageTexture);
+                newImageTexture = SDL_CreateTextureFromSurface(renderer, newImageSurface);
+                if (!newImageTexture)
+                {
+                    std::cout << "Failed to create texture for new image: " << SDL_GetError() << std::endl;
+                    SDL_FreeSurface(newImageSurface);
+                    // Handle the error if the new texture cannot be created
+                }
+
+                // Free the surface used for loading the new image
+                SDL_FreeSurface(newImageSurface);
                 }
                 else if (event.key.keysym.scancode == SDL_SCANCODE_DOWN)
                 {
@@ -120,6 +168,26 @@ SDL_Surface* imageSurface = IMG_Load("/Users/mehrshad/Desktop/background.jpg");
                 else if (event.key.keysym.scancode == SDL_SCANCODE_RIGHT)
                 {
                 rightArrowDown = true;
+                // Load the new image for the right arrow key
+                newImageSurface = IMG_Load("/Users/mehrshad/Desktop/bruhr.png");
+                if (!newImageSurface)
+                {
+                    std::cout << "Failed to load new image: " << IMG_GetError() << std::endl;
+                    // Handle the error if the new image cannot be loaded
+                }
+
+                // Update the new image texture with the new image
+                SDL_DestroyTexture(newImageTexture);
+                newImageTexture = SDL_CreateTextureFromSurface(renderer, newImageSurface);
+                if (!newImageTexture)
+                {
+                    std::cout << "Failed to create texture for new image: " << SDL_GetError() << std::endl;
+                    SDL_FreeSurface(newImageSurface);
+                    // Handle the error if the new texture cannot be created
+                }
+
+                // Free the surface used for loading the new image
+                SDL_FreeSurface(newImageSurface);
                 }
             }
             else if (event.type == SDL_KEYUP)
@@ -146,47 +214,72 @@ SDL_Surface* imageSurface = IMG_Load("/Users/mehrshad/Desktop/background.jpg");
         //move rectangle
         if (upArrowDown)
         {
+            newImageRect.y -= numPixelsToMovePerFrame;
             sdlRect.y -= numPixelsToMovePerFrame;
         }
         if (leftArrowDown)
         {
+            //newImageSurface = IMG_Load("/Users/mehrshad/Desktop/bruh.png");
+            newImageRect.x -= numPixelsToMovePerFrame;
             sdlRect.x -= numPixelsToMovePerFrame;
         }
         if (downArrowDown)
         {
+            newImageRect.y += numPixelsToMovePerFrame;
             sdlRect.y += numPixelsToMovePerFrame;
         }
         if (rightArrowDown)
         {
+            //newImageSurface = IMG_Load("/Users/mehrshad/Desktop/bruhr.png");
+            newImageRect.x += numPixelsToMovePerFrame;
             sdlRect.x += numPixelsToMovePerFrame;
         }
 
         //bounds checking and correction
-        if (sdlRect.x < 0)
+        if (newImageRect.x < 0)
         {
-            sdlRect.x = 0;
+            newImageRect.x = 0;
         }
-        else if (sdlRect.x + sdlRect.w - 1 >= resW)
+        else if (newImageRect.x + newImageRect.w - 1 >= resW)
         {
-            sdlRect.x = resW - sdlRect.w;
+            newImageRect.x = resW - newImageRect.w;
         }
-        if (sdlRect.y < 0)
+        if (newImageRect.y < 0)
         {
-            sdlRect.y = 0;
+            newImageRect.y = 0;
         }
-        else if (sdlRect.y + sdlRect.h - 1 >= resH)
+        else if (newImageRect.y + newImageRect.h - 1 >= resH)
         {
-            sdlRect.y = resH - sdlRect.h;
+            newImageRect.y = resH - newImageRect.h;
         }
+
+        // if (newImageRect.x < 0)
+        // {
+        //     newImageRect.x = 0;
+        // }
+        // else if (newImageRect.x + newImageRect.w - 1 >= resW)
+        // {
+        //     newImageRect.x = resW - newImageRect.w;
+        // }
+        // if (newImageRect.y < 0)
+        // {
+        //     newImageRect.y = 0;
+        // }
+        // else if (newImageRect.y + newImageRect.h - 1 >= resH)
+        // {
+        //     newImageRect.y = resH - newImageRect.h;
+        // }
 
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, SDL_ALPHA_OPAQUE);
         SDL_RenderClear(renderer);
 
         SDL_RenderCopy(renderer, imageTexture, nullptr, nullptr);
 
-        SDL_SetRenderDrawColor(renderer, 255, 100, 180, SDL_ALPHA_OPAQUE);
-        SDL_RenderFillRect(renderer, &sdlRect);
+        // SDL_SetRenderDrawColor(renderer, 255, 100, 180, SDL_ALPHA_OPAQUE);
+        // SDL_RenderFillRect(renderer, &sdlRect);
         //SDL_RenderPresent(renderer);
+
+        SDL_RenderCopy(renderer, newImageTexture, nullptr, &newImageRect);
 
         
 
@@ -194,8 +287,7 @@ SDL_Surface* imageSurface = IMG_Load("/Users/mehrshad/Desktop/background.jpg");
         SDL_RenderPresent(renderer);
 
         lastDrawTime = SDL_GetTicks64();
-        
-        lastDrawTime = SDL_GetTicks64();
+    
     }
 
     SDL_RenderClear(renderer);
@@ -205,6 +297,7 @@ SDL_Surface* imageSurface = IMG_Load("/Users/mehrshad/Desktop/background.jpg");
     SDL_DestroyWindow(window);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyTexture(imageTexture);
+    SDL_DestroyTexture(newImageTexture);
     std::cout << "exiting..." << std::endl;
     IMG_Quit();
     SDL_Quit();
